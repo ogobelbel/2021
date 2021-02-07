@@ -4,115 +4,113 @@ let btnNumbers = document.querySelectorAll('.btn-number'),
     actionBtn = document.querySelectorAll('.btn-action'),
     resBtn = document.querySelector('.btn-res');
 
+    let currentNumber = '',
+    isAction = false,
+    oldNumber = '',
+    res = '',
+    howAction = false,
+    actionOld = '',
+    multuVvod = false,
+    actionNow = '';
+
 function del() {
-    appData.res = appData.currentNumber = appData.oldNumber = appData.actionOld = appData.actionNow = '';
-    appData.isAction = appData.howAction = appData.multuVvod = btnNumbers[10].disabled = false;
+    res = currentNumber = oldNumber = actionOld = actionNow = '';
+    isAction = howAction = multuVvod = btnNumbers[10].disabled = false;
 }
-
-
-let appData = {
-    currentNumber: '',
-    isAction: false,
-    oldNumber: '',
-    res: '',
-    howAction: false,
-    actionOld: '',
-    multuVvod: false,
-    actionNow: '',
-};
 
 for (let i = 0; i < btnNumbers.length; i++) {
 
     btnNumbers[i].addEventListener('click', function () {
-        if ((appData.actionNow >= 1 || appData.multuVvod == true) && (appData.oldNumber === 0 || appData.oldNumber)) {
-            if (appData.actionNow == 5) {
+        if ( (actionNow >= 1 || multuVvod == true) && (currentNumber === 0 || oldNumber === 0 || currentNumber || oldNumber)) {
+            if(isAction == true){
                 del();
-                appData.actionNow = 5;
+                isAction = 5;
             }
-            if ((appData.res === 0 || appData.res) && appData.multuVvod == false) {
-                appData.oldNumber = appData.res;
-                appData.currentNumber = '';
+            if ((res === 0 || res) && multuVvod == false) {
+                oldNumber = res;
+                currentNumber = '';
             }
 
             let number = btnNumbers[i].value;
-            appData.currentNumber += number;
+                currentNumber += number;
 
-            if (btnNumbers[i].value == '.') {
-                if (appData.actionNow >= 1) {
-                    appData.currentNumber = '0.';
+                if(btnNumbers[i].value =='.'){
+                        if(actionNow >=1 || isAction==5)
+                        {
+                            currentNumber = '0.';
+                        }
+                        btnNumbers[10].disabled = true;
                 }
-                btnNumbers[10].disabled = true;
-            }
-            if (appData.actionNow >= 1) {
-                appData.actionOld = appData.actionNow;
-                if (appData.multuVvod == false) {
-                    appData.actionNow = '';
+                if (actionNow >= 1 ) {
+                    actionOld = actionNow; 
+                    if(multuVvod==false){
+                        actionNow = '';
+                    }
+                    multuVvod = true;
                 }
-                appData.multuVvod = true;
-            }
-            screenContent.textContent = appData.currentNumber;
+                screenContent.textContent = currentNumber;
             rasschet();
         } else {
-            if ((appData.res === 0 || appData.res) && appData.multuVvod == false) {
-                appData.oldNumber = appData.res;
-                appData.currentNumber = '';
+            if ((res === 0 || res) && multuVvod == false) {
+                oldNumber = res;
+                currentNumber = '';
             }
             let number = btnNumbers[i].value;
-            appData.currentNumber += number;
-            if (btnNumbers[i].value == '.') {
-                appData.currentNumber = '0.';
+            currentNumber += number;
+            if(btnNumbers[i].value =='.'){
+                currentNumber = '0.';
                 btnNumbers[10].disabled = true;
             }
-            screenContent.textContent = appData.currentNumber;
-            appData.multuVvod = true;
+            screenContent.textContent = currentNumber;
+            multuVvod = true;
         }
-        appData.howAction = true;
-        appData.isAction = false;
+        howAction = true;
+        isAction = false;
     });
 }
 
 cancelBtn.addEventListener('click', function () {
     del();
-    screenContent.textContent = appData.currentNumber;
+    screenContent.textContent = currentNumber;
 });
 
 for (let i = 0; i < actionBtn.length; i++) {
     actionBtn[i].addEventListener('click', function () {
-        appData.multuVvod = false; //отключаем ввод нескольких символов
-        if (appData.howAction == true) { //если до этого были цифры - записываем их 
-            appData.oldNumber = appData.currentNumber;
-            appData.currentNumber = '';
+        multuVvod = false; //отключаем ввод нескольких символов
+        if (howAction == true) { //если до этого были цифры - записываем их 
+            oldNumber = currentNumber;
+            currentNumber = '';
         }
-        appData.howAction = false; //выключаем ввод чисел
-        if (appData.res === 0 || appData.res) { //если есть результат то выводим его
-            screenContent.textContent = appData.res;
+        howAction = false; //выключаем ввод чисел
+        if (res === 0 || res) { //если есть результат то выводим его
+            screenContent.textContent = res;
         }
-        appData.actionNow = i + 1; //запоимнаем операцию
+        actionNow = i + 1; //запоимнаем операцию
         btnNumbers[10].disabled = false; //разрешаем точку
     })
 }
 
 function rasschet() {
-    if (appData.actionOld == 1) {
-        appData.res = (+appData.currentNumber) * (+appData.oldNumber);
+    if (actionOld == 1) {
+        res = (+currentNumber) * (+oldNumber);
     }
-    if (appData.actionOld == 2) {
-        appData.res = +appData.currentNumber + (+appData.oldNumber);
+    if (actionOld == 2) {
+        res = +currentNumber + (+oldNumber);
     }
-    if (appData.actionOld == 3) {
-        appData.res = (+appData.oldNumber) - (+appData.currentNumber);
+    if (actionOld == 3) {
+        res = (+oldNumber) - (+currentNumber);
     }
-    if (appData.actionOld == 4) {
-        appData.res = (+appData.oldNumber) / (+appData.currentNumber);
+    if (actionOld == 4) {
+        res = (+oldNumber) / (+currentNumber);
     }
-    appData.res = String(appData.res);
+    res = String(res);
 }
 
 resBtn.addEventListener('click', function () {
-    if ((appData.currentNumber && appData.oldNumber)) {
-        screenContent.textContent = appData.res;
+    if ((currentNumber && oldNumber)) {
+        screenContent.textContent = res;
         btnNumbers[10].disabled = false;
-        appData.actionNow = 5;
-        appData.howAction = false;
+        actionNow = 5;
+        howAction = false;
     }
 });
