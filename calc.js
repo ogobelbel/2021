@@ -114,3 +114,17 @@ resBtn.addEventListener('click', function () {
         howAction = false;
     }
 });
+
+
+// let timerId =  setTimeout(sayHello, 3000 );
+// clearTimeout(timerId);
+
+// let timerId =  setInterval(sayHello, 3000 );
+
+
+// function sayHello() {
+//     alert('sayHello');
+//   }
+//   clearTimeout(timerId);
+
+
